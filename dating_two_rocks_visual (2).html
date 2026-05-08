@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dating Rocks: Young vs Old</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg-page: #f5f0ea;
+    --text-dark: #2a1f15;
+    --text-medium: #5d4a30;
+    --accent-dark: #5d4a30;
+    --navy: #253D5B;
+  }
+
+  body {
+    font-family: 'Courier Prime', 'Courier New', monospace;
+    background: var(--bg-page);
+    color: var(--text-dark);
+    padding: 6px;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .container {
+    background: var(--bg-page);
+    padding: 6px;
+    max-width: 900px;
+    width: 100%;
+  }
+
+  .rocks-row {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: center;
+    justify-items: center;
+  }
+
+  .rock-card {
+    text-align: center;
+    width: 100%;
+    opacity: 0;
+    animation: fadeInScale 0.7s ease forwards;
+  }
+
+  .rock-card.young {
+    animation-delay: 0.3s;
+  }
+
+  .rock-card.old {
+    animation-delay: 2.0s;
+  }
+
+  @keyframes fadeInScale {
+    0% {
+      opacity: 0;
+      transform: scale(0.85);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .rock-label {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  .rock-svg {
+    width: 100%;
+    max-width: 160px;
+    height: auto;
+    aspect-ratio: 1;
+    filter: drop-shadow(0 3px 8px rgba(0,0,0,0.2));
+  }
+
+  .ratio-info {
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: white;
+    border: 1.5px solid var(--text-medium);
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  }
+
+  .ratio-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 16px;
+    padding: 3px 0;
+  }
+
+  .ratio-row.parent .label-dot {
+    background: radial-gradient(circle at 35% 35%, #a37bc8 0%, #6b3fa0 60%, #4d2978 100%);
+  }
+
+  .ratio-row.daughter .label-dot {
+    background: radial-gradient(circle at 35% 35%, #f5d56a 0%, #d4a017 60%, #a07a0a 100%);
+  }
+
+  .label-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1.5px solid var(--text-dark);
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  .ratio-label {
+    color: var(--text-dark);
+    font-weight: bold;
+  }
+
+  .ratio-value {
+    color: var(--text-dark);
+    font-weight: bold;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* The arrow between rocks */
+  .arrow-section {
+    text-align: center;
+    opacity: 0;
+    animation: fadeIn 0.6s ease forwards;
+    animation-delay: 1.2s;
+  }
+
+  .arrow-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--text-dark);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+  }
+
+  .arrow-section svg {
+    width: 80px;
+    height: 40px;
+  }
+
+  .time-passes {
+    font-size: 14px;
+    color: var(--accent-dark);
+    margin-top: 6px;
+    font-style: italic;
+  }
+
+  /* The key takeaway box at the bottom */
+  .takeaway {
+    margin-top: 12px;
+    padding: 10px 16px;
+    background: white;
+    border: 2px solid var(--navy);
+    border-radius: 8px;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+    animation-delay: 3.2s;
+  }
+
+  .takeaway-text {
+    font-size: 19px;
+    color: var(--text-dark);
+    font-weight: 600;
+    line-height: 1.5;
+  }
+
+  .takeaway-text strong {
+    color: var(--navy);
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  .replay-btn {
+    display: block;
+    margin: 8px auto 0;
+    background: white;
+    color: var(--navy);
+    border: 2px solid var(--navy);
+    padding: 5px 14px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    cursor: pointer;
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+    animation-delay: 3.8s;
+    transition: all 0.15s ease;
+  }
+
+  .replay-btn:hover {
+    background: var(--navy);
+    color: white;
+  }
+
+  @media (max-width: 700px) {
+    .rocks-row {
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    .arrow-section svg {
+      transform: rotate(90deg);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="rocks-row">
+
+    <!-- YOUNG ROCK: ~95% K-40, 5% Ar-40 -->
+    <div class="rock-card young">
+      <div class="rock-label">Young Rock</div>
+      <svg class="rock-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="rockGradYoung" cx="40%" cy="35%" r="75%">
+            <stop offset="0%" stop-color="#6d5a45" />
+            <stop offset="60%" stop-color="#4a3a2c" />
+            <stop offset="100%" stop-color="#2a1f15" />
+          </radialGradient>
+          <radialGradient id="parentGradYoung" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#a37bc8" />
+            <stop offset="60%" stop-color="#6b3fa0" />
+            <stop offset="100%" stop-color="#4d2978" />
+          </radialGradient>
+          <radialGradient id="daughterGradYoung" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#f5d56a" />
+            <stop offset="60%" stop-color="#d4a017" />
+            <stop offset="100%" stop-color="#a07a0a" />
+          </radialGradient>
+        </defs>
+
+        <!-- Rock outline -->
+        <polygon
+          points="50,80 90,40 160,30 220,55 270,110 280,180 240,250 170,275 90,260 40,200 30,140"
+          fill="url(#rockGradYoung)"
+          stroke="#1a1208"
+          stroke-width="2.5"
+          stroke-linejoin="round"
+        />
+        <!-- Highlight -->
+        <polygon
+          points="50,80 90,40 160,30 220,55 200,80 150,75 100,90 70,110"
+          fill="white"
+          opacity="0.05"
+          stroke="none"
+        />
+
+        <!-- Atoms: ~95% purple, ~5% gold (mostly parent, just a few daughter) -->
+        <!-- 30 atoms total visible: 28 purple + 2 gold -->
+        <!-- Purple parent atoms (K-40) -->
+        <circle cx="80" cy="120" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="115" cy="95" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="155" cy="80" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="195" cy="100" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="230" cy="125" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="60" cy="160" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="100" cy="155" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="140" cy="130" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="180" cy="150" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="225" cy="175" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="80" cy="200" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="125" cy="180" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="170" cy="195" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="215" cy="215" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="105" cy="225" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="155" cy="240" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="195" cy="245" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="135" cy="100" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="175" cy="125" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="120" cy="220" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="90" cy="180" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="160" cy="170" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="200" cy="180" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="130" cy="155" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="245" cy="155" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="75" cy="225" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="180" cy="225" r="6" fill="url(#parentGradYoung)"/>
+        <circle cx="150" cy="210" r="6" fill="url(#parentGradYoung)"/>
+        <!-- Just 2 gold daughter atoms -->
+        <circle cx="110" cy="245" r="6" fill="url(#daughterGradYoung)"/>
+        <circle cx="220" cy="145" r="6" fill="url(#daughterGradYoung)"/>
+      </svg>
+      <div class="ratio-info">
+        <div class="ratio-row parent">
+          <span class="ratio-label"><span class="label-dot"></span>K-40 (parent):</span>
+          <span class="ratio-value">Many</span>
+        </div>
+        <div class="ratio-row daughter">
+          <span class="ratio-label"><span class="label-dot"></span>Ar-40 (daughter):</span>
+          <span class="ratio-value">Few</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ARROW: time passes -->
+    <div class="arrow-section">
+      <div class="arrow-text">Time Passes</div>
+      <svg viewBox="0 0 60 30" xmlns="http://www.w3.org/2000/svg">
+        <!-- Uniform thickness arrow body -->
+        <rect x="3" y="11" width="40" height="8" fill="#2a1f15"/>
+        <!-- Arrowhead -->
+        <polygon
+          points="38,4 38,26 56,15"
+          fill="#2a1f15"
+        />
+      </svg>
+    </div>
+
+    <!-- OLD ROCK: ~25% K-40, 75% Ar-40 -->
+    <div class="rock-card old">
+      <div class="rock-label">Old Rock</div>
+      <svg class="rock-svg" viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="rockGradOld" cx="40%" cy="35%" r="75%">
+            <stop offset="0%" stop-color="#6d5a45" />
+            <stop offset="60%" stop-color="#4a3a2c" />
+            <stop offset="100%" stop-color="#2a1f15" />
+          </radialGradient>
+          <radialGradient id="parentGradOld" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#a37bc8" />
+            <stop offset="60%" stop-color="#6b3fa0" />
+            <stop offset="100%" stop-color="#4d2978" />
+          </radialGradient>
+          <radialGradient id="daughterGradOld" cx="35%" cy="35%" r="65%">
+            <stop offset="0%" stop-color="#f5d56a" />
+            <stop offset="60%" stop-color="#d4a017" />
+            <stop offset="100%" stop-color="#a07a0a" />
+          </radialGradient>
+        </defs>
+
+        <!-- Rock outline -->
+        <polygon
+          points="50,80 90,40 160,30 220,55 270,110 280,180 240,250 170,275 90,260 40,200 30,140"
+          fill="url(#rockGradOld)"
+          stroke="#1a1208"
+          stroke-width="2.5"
+          stroke-linejoin="round"
+        />
+        <!-- Highlight -->
+        <polygon
+          points="50,80 90,40 160,30 220,55 200,80 150,75 100,90 70,110"
+          fill="white"
+          opacity="0.05"
+          stroke="none"
+        />
+
+        <!-- 30 atoms: ~7-8 purple, ~22-23 gold -->
+        <!-- Purple parent atoms (just a few - K-40 has decayed) -->
+        <circle cx="100" cy="155" r="6" fill="url(#parentGradOld)"/>
+        <circle cx="180" cy="125" r="6" fill="url(#parentGradOld)"/>
+        <circle cx="155" cy="210" r="6" fill="url(#parentGradOld)"/>
+        <circle cx="220" cy="195" r="6" fill="url(#parentGradOld)"/>
+        <circle cx="80" cy="200" r="6" fill="url(#parentGradOld)"/>
+        <circle cx="195" cy="80" r="6" fill="url(#parentGradOld)"/>
+        <circle cx="125" cy="100" r="6" fill="url(#parentGradOld)"/>
+        <!-- Gold daughter atoms (most of them now) -->
+        <circle cx="80" cy="120" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="115" cy="95" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="155" cy="80" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="230" cy="125" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="60" cy="160" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="140" cy="130" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="195" cy="100" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="225" cy="175" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="125" cy="180" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="170" cy="195" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="215" cy="215" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="105" cy="225" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="195" cy="245" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="135" cy="100" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="175" cy="155" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="120" cy="220" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="90" cy="180" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="160" cy="170" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="200" cy="180" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="130" cy="155" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="245" cy="155" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="75" cy="225" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="180" cy="225" r="6" fill="url(#daughterGradOld)"/>
+        <circle cx="110" cy="245" r="6" fill="url(#daughterGradOld)"/>
+      </svg>
+      <div class="ratio-info">
+        <div class="ratio-row parent">
+          <span class="ratio-label"><span class="label-dot"></span>K-40 (parent):</span>
+          <span class="ratio-value">Few</span>
+        </div>
+        <div class="ratio-row daughter">
+          <span class="ratio-label"><span class="label-dot"></span>Ar-40 (daughter):</span>
+          <span class="ratio-value">Many</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="takeaway">
+    <div class="takeaway-text">
+      The <strong>more daughter atoms</strong> a rock contains,<br>
+      the <strong>older</strong> it is.
+    </div>
+  </div>
+
+  <button class="replay-btn" id="replayBtn">↺ Replay</button>
+
+</div>
+
+<script>
+  const replayBtn = document.getElementById('replayBtn');
+  replayBtn.addEventListener('click', () => {
+    const animatedElements = document.querySelectorAll('.rock-card, .arrow-section, .takeaway, .replay-btn');
+    animatedElements.forEach(el => {
+      el.style.animation = 'none';
+      el.offsetHeight;
+      el.style.animation = '';
+    });
+  });
+</script>
+
+</body>
+</html>
